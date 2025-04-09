@@ -7,13 +7,13 @@ function App() {
 
   return (
     <main className="px-12">
-      <nav className='flex p-10 border-b border-b-gray-300'>
+      <nav className='flex gap-x-20 p-10 border-b border-b-gray-300'>
         <div>
-          <img src='./assets/shared/logo.svg'/>
+          <img src='./assets/shared/logo.svg' className=''/>
         </div>
-        <div className='ms-auto mt-4'>
-          <button className='font-light'>
-            START SLIDESHOW
+        <div className='md:ms-auto md:mt-4'>
+          <button >
+            <p id='start-slideshow' className='text-nowrap'>START SLIDESHOW</p>
           </button>
         </div>
       </nav>
