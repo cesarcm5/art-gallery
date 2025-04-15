@@ -34,16 +34,32 @@ body {
     letter-spacing: 2.5px;
     color: #7D7D7D;
   }
+  #art {
+    width:fit-content;
+  }
+  #portrait {
+    width: auto;
+    height: fit-content ;
+  }
 }
 
 /*  MOBILE DESIGN  */
 
 @media (max-width: 750px){
   #start-slideshow{
-    font-size: 9px;
+    font-size: 12px;
     line-height: 15px;
     font-weight: bold;
     letter-spacing: 2.5px;
     color: #7D7D7D;
+    margin-top: 16px;
+    margin-left: 16px;
+  }
+  #navbar {
+    width:max-content;
+  }
+  #art {
+    width:fit-content;
+    justify-self: center;
   }
 }
