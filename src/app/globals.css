@@ -24,6 +24,15 @@ body {
   color: var(--foreground);
 }
 
+#start-slideshow {
+  color: #7D7D7D;
+}
+#description {
+  color: #7D7D7D;
+  font-size: 15px;
+  line-height: 28px;
+  font-weight: 700;
+}
 /*  DESKTOP DESIGN  */
 
 @media (min-width: 1025px){
@@ -40,6 +49,11 @@ body {
   #portrait {
     width: auto;
     height: fit-content ;
+  }
+  #text-container{
+    align-self:center;
+    display: flex;
+    justify-content: end;
   }
 }
 
