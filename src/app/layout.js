@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${libre_bask.variable}antialiased`}
+        className={`${libre_bask.className} antialiased`}
       >
         {children}
       </body>

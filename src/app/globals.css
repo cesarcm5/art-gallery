@@ -37,6 +37,12 @@ body {
   color: #7D7D7D;
   font-size: 15px;
 }
+#source-anchor {
+  font-size: 9px;
+  line-height: auto;
+  letter-spacing: 1.93px;
+  color:#7D7D7D;
+}
 /*  DESKTOP DESIGN  */
 
 @media (min-width: 1025px){
@@ -54,22 +60,29 @@ body {
     width: auto;
     height: fit-content ;
   }
-  #text-container{
-    align-self:center;
-    display: flex;
-    justify-content: end;
-  }
   #artist-info {
     margin-left: 400px;
     margin-top: 20px;
     width: 450px;
-    height: 250px;
+    height: auto;
   }
   .data-name{
     font-size: 56px;
     line-height: 58px;
   }
-
+  #text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: end;
+  }
+  #picture-year {
+    font-size: 200px;
+    color: #F3F3F3;
+  }
+  #source-anchor {
+    margin-right: 320px;
+  }
 }
 
 /*  MOBILE DESIGN  */

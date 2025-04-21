@@ -18,7 +18,7 @@ export default function Slideshow() {
     return (
         <main>
             <Header/>
-            <div className="">         
+            <div className="mt-10">         
                 <div className="grid grid-cols md:flex ms-10">
                     <div className="md:flex">
                         <div id="artist-picture" className="md:mx-8 md:my-10">
@@ -28,29 +28,32 @@ export default function Slideshow() {
                                 className=""
                                 width={475}
                                 height={560}
-                                />
+                            />
                         </div>
                         <div id="artist-info" className="bg-white absolute flex flex-col ps-14 pt-8">
                             <div id="picture-name" className="md:w-5/7">
                                 <span className="data-name text-start font-semibold">{data[currentIndex].name}</span>
                             </div>
-                            <div className="mt-3">
+                            <div className="mt-3 mb-10">
                                 <span id="artist-name" className="text-start">{data[currentIndex].artist.name}</span>
                             </div>
                         </div>
                     </div>  
                     <div id="text-container" className="md:ms-20 md:w-2/4">
+                        <div className="top-35 -z-1 absolute">
+                            <span id="picture-year">{data[currentIndex].year}</span>
+                        </div>
                         <p id="description" className="md:w-3/5 text-left text-pretty align-top">{data[currentIndex].description}</p>
-                    </div>   
-                    <div>
-                        <a href={data[currentIndex].source}>
-                            GO TO SOUCRE
+                        <a id="source-anchor" className="mt-15 text-left  border-b-1" href={data[currentIndex].source}>
+                            GO TO SOURCE
                         </a>
                     </div>
                 </div>
-                <div className="absolute bottom-0">
-                    <button onClick={handlePrev}>Previous</button>
-                    <button onClick={handleNext}>Next</button>
+                <div className="">
+                    <div>
+                        <button onClick={handlePrev}>Previous</button>
+                        <button onClick={handleNext}>Next</button>
+                    </div>
                 </div> 
             </div>
         </main>
