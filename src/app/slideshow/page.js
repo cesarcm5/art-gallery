@@ -30,14 +30,23 @@ export default function Slideshow() {
                                 height={560}
                                 />
                         </div>
-                        <div id="artist-info" className="bg-white absolute">
-                            <p>{data[currentIndex].name}</p>
-                            <p>{data[currentIndex].artist.name}</p>
+                        <div id="artist-info" className="bg-white absolute flex flex-col ps-14 pt-8">
+                            <div id="picture-name" className="md:w-5/7">
+                                <span className="data-name text-start font-semibold">{data[currentIndex].name}</span>
+                            </div>
+                            <div className="mt-3">
+                                <span id="artist-name" className="text-start">{data[currentIndex].artist.name}</span>
+                            </div>
                         </div>
-                    </div>
+                    </div>  
                     <div id="text-container" className="md:ms-20 md:w-2/4">
                         <p id="description" className="md:w-3/5 text-left text-pretty align-top">{data[currentIndex].description}</p>
                     </div>   
+                    <div>
+                        <a href={data[currentIndex].source}>
+                            GO TO SOUCRE
+                        </a>
+                    </div>
                 </div>
                 <div className="absolute bottom-0">
                     <button onClick={handlePrev}>Previous</button>

@@ -33,6 +33,10 @@ body {
   line-height: 28px;
   font-weight: 700;
 }
+#artist-name {
+  color: #7D7D7D;
+  font-size: 15px;
+}
 /*  DESKTOP DESIGN  */
 
 @media (min-width: 1025px){
@@ -55,6 +59,17 @@ body {
     display: flex;
     justify-content: end;
   }
+  #artist-info {
+    margin-left: 400px;
+    margin-top: 20px;
+    width: 450px;
+    height: 250px;
+  }
+  .data-name{
+    font-size: 56px;
+    line-height: 58px;
+  }
+
 }
 
 /*  MOBILE DESIGN  */
@@ -76,4 +91,5 @@ body {
     width:fit-content;
     justify-self: center;
   }
+  
 }
