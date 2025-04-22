@@ -66,10 +66,18 @@ export default function Slideshow() {
                         </a>
                     </div>
                 </div>
-                <div className="">
-                    <div>
-                        <button onClick={handlePrev}>Previous</button>
-                        <button onClick={handleNext}>Next</button>
+                <div className="flex">
+                    <div className="">
+                        <p className="text-lg font-bold">{data[currentIndex].name}</p>
+                        <p>{data[currentIndex].artist.name}</p>
+                    </div>
+                    <div className="self-end">
+                        <button className="" onClick={handlePrev}>
+                            <img src="./assets/shared/icon-back-button.svg"/>
+                        </button>
+                        <button onClick={handleNext}>
+                            <img src="./assets/shared/icon-next-button.svg"/>
+                        </button>
                     </div>
                 </div>
             </div>
