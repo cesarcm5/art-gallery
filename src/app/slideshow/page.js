@@ -66,16 +66,16 @@ export default function Slideshow() {
                         </a>
                     </div>
                 </div>
-                <div className="flex">
+                <div className="flex justify-between mt-20 mb-10 ms-15">
                     <div className="">
                         <p className="text-lg font-bold">{data[currentIndex].name}</p>
                         <p>{data[currentIndex].artist.name}</p>
                     </div>
-                    <div className="self-end">
-                        <button className="" onClick={handlePrev}>
-                            <img src="./assets/shared/icon-back-button.svg"/>
+                    <div className="me-8">
+                        <button type="button" className={`me-6  ${currentIndex == 0 ? "disabled:opacity-20" : " "} `} onClick={handlePrev} disabled={currentIndex == 0}>
+                            <img className="" src="./assets/shared/icon-back-button.svg"/>
                         </button>
-                        <button onClick={handleNext}>
+                        <button className={ ` ${currentIndex == data.length - 1 ? "disabled:opacity-20" : " "} ` } onClick={handleNext} disabled={currentIndex == data.length - 1}>
                             <img src="./assets/shared/icon-next-button.svg"/>
                         </button>
                     </div>
