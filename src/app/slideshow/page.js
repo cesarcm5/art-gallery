@@ -4,6 +4,7 @@ import data from "../../../starter-code/data.json"
 import { useState } from "react"
 export default function Slideshow() {
 
+
     const [currentIndex, setCurrentIndex] = useState(0)
 
     const [openModal, setOpenModal] = useState(false)
@@ -15,10 +16,14 @@ export default function Slideshow() {
         setCurrentIndex((prevIndex) => prevIndex === 0 ? data.length - 1 : prevIndex - 1)
     }
 
+    const toggleGallery = () => {
+        openModal ? setOpenModal(false) : setOpenModal(true);
+    }
+
     return (
         <main>
-            <Header/>
-            <div className="mt-10">         
+            <Header />
+            <div className="mt-10">
                 <div className="grid grid-cols md:flex ms-10">
                     <div className="md:flex">
                         <div id="artist-picture" className="md:mx-8 md:my-10">
@@ -29,6 +34,12 @@ export default function Slideshow() {
                                 width={475}
                                 height={560}
                             />
+                            <div id="view-image" className="absolute bottom-1 bg-black ms-3 mb-2">
+                                <button onClick={toggleGallery} className="flex ms-5 mt-3 gap-x-2 ">
+                                    <img src="./assets/shared/icon-view-image.svg" className="p-1" />
+                                    <span className="text-white text-[9px] tracking-[2px] font-bold mt-1">VIEW IMAGE</span>
+                                </button>
+                            </div>
                         </div>
                         <div id="artist-info" className="bg-white absolute flex flex-col ps-14 pt-8">
                             <div id="picture-name" className="md:w-5/7">
@@ -38,7 +49,13 @@ export default function Slideshow() {
                                 <span id="artist-name" className="text-start">{data[currentIndex].artist.name}</span>
                             </div>
                         </div>
-                    </div>  
+                        <div className="self-end">
+                            <img
+                                src={data[currentIndex].artist.image}
+                                alt={data[currentIndex].artist.name}
+                            />
+                        </div>
+                    </div>
                     <div id="text-container" className="md:ms-20 md:w-2/4">
                         <div className="top-35 -z-1 absolute">
                             <span id="picture-year">{data[currentIndex].year}</span>
@@ -54,8 +71,24 @@ export default function Slideshow() {
                         <button onClick={handlePrev}>Previous</button>
                         <button onClick={handleNext}>Next</button>
                     </div>
-                </div> 
+                </div>
             </div>
+            {openModal ? (
+                <div className="modal">
+                    <div className="modalContainer">
+                        <div className="closeContainer">
+                            <button onClick={toggleGallery} className="close">
+                                <h4 className="close">close</h4>
+                            </button>
+                        </div>
+                        <img
+                            className="galleryImage"
+                            src={data[currentIndex].images.gallery}
+                            alt={data[currentIndex].name}
+                        />
+                    </div>
+                </div>
+            ) : null}
         </main>
     )
 }

@@ -27,6 +27,9 @@ body {
 #start-slideshow {
   color: #7D7D7D;
 }
+#start-slideshow:hover {
+  color: black;
+}
 #description {
   color: #7D7D7D;
   font-size: 15px;
@@ -42,6 +45,44 @@ body {
   line-height: auto;
   letter-spacing: 1.93px;
   color:#7D7D7D;
+}
+#source-anchor:hover{
+  color: black;
+}
+.modal {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.modalContainer {
+  margin: 4rem;
+  width: 30%;
+}
+.closeContainer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.close {
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  cursor: pointer;
+  text-align: end;
+  padding-bottom: 1rem;
+  background: none;
+  border: none;
+}
+.close:hover {
+  color: #7d7d7d;
 }
 /*  DESKTOP DESIGN  */
 
@@ -75,6 +116,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: end;
+    margin-right: 5px;
   }
   #picture-year {
     font-size: 200px;
@@ -82,6 +124,10 @@ body {
   }
   #source-anchor {
     margin-right: 320px;
+  }
+  #view-image {
+    width: 152px;
+    height: 40px;
   }
 }
 
