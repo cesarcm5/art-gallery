@@ -131,7 +131,7 @@ function GalleryRoom() {
       <Nav tone="ink" />
 
       <main
-        className="relative h-screen w-screen overflow-hidden"
+        className="h-viewport relative w-screen overflow-hidden"
         style={{ background: "var(--studio-bg-ink)" }}
       >
         {/* The shared room is clipped to this box */}
@@ -174,10 +174,13 @@ function GalleryRoom() {
           style={{ zIndex: 60 }}
         >
           <div
-            className="mx-auto w-full"
+            className="safe-bottom mx-auto w-full"
             style={{
               maxWidth: "var(--content-max)",
-              padding: "0 var(--page-pad-x) clamp(20px, 3vh, 36px)",
+              // Longhand: the `padding` shorthand would reset padding-bottom
+              // to 0 and silently defeat .safe-bottom.
+              paddingLeft: "var(--page-pad-x)",
+              paddingRight: "var(--page-pad-x)",
             }}
           >
             <AnimatePresence mode="wait">
@@ -375,7 +378,7 @@ export default function SlideshowPage() {
   return (
     <Suspense
       fallback={
-        <div style={{ minHeight: "100vh", background: "var(--studio-bg-ink)" }} />
+        <div className="min-h-viewport" style={{ background: "var(--studio-bg-ink)" }} />
       }
     >
       <GalleryRoom />

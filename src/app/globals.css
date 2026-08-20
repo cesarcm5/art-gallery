@@ -85,6 +85,37 @@ body {
   color: var(--studio-bg-paper);
 }
 
+/* ---------------------------------------------------------------------------
+   Viewport height on mobile browsers.
+
+   100vh is the viewport *without* the browser's own chrome, so a full-height
+   layout puts its bottom row underneath the toolbar — which is exactly where
+   the slideshow's navigation buttons were hiding. svh is the smallest stable
+   viewport: the controls stay reachable whether the toolbar is showing or
+   sliding away, and unlike dvh it does not reflow while that happens.
+--------------------------------------------------------------------------- */
+.h-viewport {
+  height: 100vh;
+  height: 100svh;
+}
+
+.min-h-viewport {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Keep UI clear of the notch and the home indicator. Paired with
+   viewport-fit=cover in the layout, which is what makes env() non-zero. */
+.safe-top {
+  padding-top: calc(var(--page-pad-y) + env(safe-area-inset-top, 0px));
+}
+
+.safe-bottom {
+  padding-bottom: calc(
+    clamp(20px, 3vh, 36px) + env(safe-area-inset-bottom, 0px)
+  );
+}
+
 /* Lenis smooth-scroll contract */
 html.lenis,
 html.lenis body {

@@ -51,7 +51,7 @@ export default function Home() {
         --------------------------------------------------------------- */}
         <section
           ref={heroRef}
-          className="relative flex min-h-screen items-center overflow-hidden"
+          className="min-h-viewport relative flex items-center overflow-hidden"
         >
           <div className="panel-glow" aria-hidden="true" />
 
@@ -132,13 +132,12 @@ export default function Home() {
         <div style={{ height: "200vh", position: "relative" }}>
         <section
           id="index"
-          className="overflow-hidden"
+          className="h-viewport overflow-hidden"
           style={{
             // Pinned: the room holds still at the top of the viewport while
             // the rest of the page travels over it.
             position: "sticky",
             top: 0,
-            height: "100vh",
             borderTopLeftRadius: "var(--panel-radius)",
             borderTopRightRadius: "var(--panel-radius)",
             // sticky creates a stacking context, so the section's inner

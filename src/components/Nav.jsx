@@ -56,10 +56,13 @@ export default function Nav({ tone = "paper" }) {
       }}
     >
       <div
-        className="mx-auto flex items-center justify-between"
+        className="safe-top mx-auto flex items-center justify-between"
         style={{
           maxWidth: "var(--content-max)",
-          padding: "var(--page-pad-y) var(--page-pad-x)",
+          // Longhand so .safe-top keeps control of padding-top.
+          paddingBottom: "var(--page-pad-y)",
+          paddingLeft: "var(--page-pad-x)",
+          paddingRight: "var(--page-pad-x)",
         }}
       >
         <Link href="/" aria-label="Galleria — home" className="flex items-center gap-4">

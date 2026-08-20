@@ -34,6 +34,14 @@ const spaceMono = Space_Mono({
   variable: "--font-space-mono",
 });
 
+/* viewport-fit=cover is what makes env(safe-area-inset-*) report anything on
+   a notched phone; without it the safe-area padding silently resolves to 0. */
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata = {
   title: "Galleria — A Study in Masterworks",
   description:
