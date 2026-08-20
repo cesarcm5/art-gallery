@@ -198,8 +198,11 @@ function PictureLight({ channel, indexRef, count }) {
       Math.sin(t * 0.6 + phase) * 0.035 +
       Math.sin(t * 0.23 + phase * 1.7) * 0.02;
 
-    const peak = slotRef.current === centre ? 26 : 12;
-    const wanted = relocating || offWall ? 0 : peak * breathe;
+    // Only the work in frame is lit. The other two fixtures stay dark at
+    // their slots — keeping them mounted is what lets a lamp cross-fade in
+    // place instead of dragging its pool along the wall to get here.
+    const inFrame = slotRef.current === centre;
+    const wanted = relocating || offWall || !inFrame ? 0 : 30 * breathe;
 
     light.intensity = THREE.MathUtils.damp(light.intensity, wanted, 8, delta);
 
@@ -358,6 +361,8 @@ export default function GalleryScene({
           <TrackLamp
             key={`lamp-${painting.slug}`}
             x={xForIndex(i)}
+            index={i}
+            indexRef={indexRef}
             warmth={((i * 37) % 10) / 10}
             phase={i * 1.7}
           />

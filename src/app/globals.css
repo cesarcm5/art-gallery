@@ -249,13 +249,33 @@ html.lenis body {
   white-space: nowrap;
 }
 
+/* The slideshow's control row. Wrapping is the safety net; the phone rules
+   below are what actually keep it on one line. */
+.control-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
 @media (max-width: 640px) {
+  .control-row {
+    gap: 12px;
+  }
   .btn-round {
+    width: 44px;
+    height: 44px;
     padding-left: 14px;
     padding-right: 14px;
   }
   .btn-round .t-label {
     letter-spacing: 0.24em;
+  }
+  /* "View Image" is the icon alone at this width — its label plus the other
+     three controls overran the row by about 20px. */
+  .label-optional {
+    display: none;
   }
 }
 

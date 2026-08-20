@@ -13,7 +13,7 @@ import { LAMP_Y, LAMP_Z, WALL_H, HANG_HEIGHT } from "./constants";
  * `warmth` gives each fixture a slightly different lamp age, and `phase`
  * offsets a very slow breathe so the room never looks digitally uniform.
  */
-export default function TrackLamp({ x = 0, lit = true, warmth = 0, phase = 0 }) {
+export default function TrackLamp({ x = 0, index = 0, indexRef, warmth = 0, phase = 0 }) {
   const lensRef = useRef(null);
 
   // Aim the head down at the centre of the canvas. Rotating +X about the
@@ -29,16 +29,25 @@ export default function TrackLamp({ x = 0, lit = true, warmth = 0, phase = 0 }) 
     [warmth]
   );
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (!lensRef.current) return;
+
+    // The bulb matches its own light: only the work on screen is switched on.
+    const lit = indexRef
+      ? Math.round(indexRef.current) === index
+      : true;
 
     // A slow, shallow drift — filament warmth rather than a flicker effect.
     const t = state.clock.elapsedTime;
     const breathe = 1 + Math.sin(t * 0.6 + phase) * 0.035 +
       Math.sin(t * 0.23 + phase * 1.7) * 0.02;
 
-    const base = lit ? 2.6 : 0.35;
-    lensRef.current.material.emissiveIntensity = base * breathe;
+    lensRef.current.material.emissiveIntensity = THREE.MathUtils.damp(
+      lensRef.current.material.emissiveIntensity,
+      (lit ? 2.6 : 0.06) * breathe,
+      6,
+      delta
+    );
   });
 
   return (

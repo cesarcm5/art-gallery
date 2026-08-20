@@ -231,8 +231,7 @@ function GalleryRoom() {
             </AnimatePresence>
 
             <div
-              className="mt-8 flex items-end justify-between"
-              style={{ gap: 24 }}
+              className="control-row mt-8"
             >
               <div className="pointer-events-auto flex items-center" style={{ gap: 12 }}>
                 <button
@@ -255,7 +254,7 @@ function GalleryRoom() {
                   aria-label={`View ${current.name} full size`}
                 >
                   <Icon src="/assets/shared/icon-view-image.svg" size={12} />
-                  <span className="t-label">View Image</span>
+                  <span className="t-label label-optional">View Image</span>
                 </button>
               </div>
 
