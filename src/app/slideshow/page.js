@@ -2,6 +2,8 @@
 
 import { Fragment, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
+import Icon from "@/components/Icon";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AnimatePresence, motion } from "framer-motion";
@@ -274,13 +276,18 @@ function SlideshowDeck() {
                           boxShadow: "var(--shadow-overlay)",
                         }}
                       >
-                        <img
+                        <Image
                           data-panel-art
-                          src={painting.images.hero.large}
+                          src={painting.images.hero.large.src}
                           alt={painting.name}
+                          width={painting.images.hero.large.width}
+                          height={painting.images.hero.large.height}
+                          // Height-constrained by maxHeight:62vh, so the
+                          // rendered width is well under half the viewport.
+                          sizes="(max-width: 900px) 80vw, 34vw"
                           className="block h-full w-full object-cover"
                           style={{ maxHeight: "62vh", opacity: 0 }}
-                          loading={i < 2 ? "eager" : "lazy"}
+                          priority={i < 2}
                         />
 
                         <button
@@ -300,13 +307,7 @@ function SlideshowDeck() {
                               "background var(--dur-mid) var(--ease-studio)",
                           }}
                         >
-                          <img
-                            src="/assets/shared/icon-view-image.svg"
-                            alt=""
-                            width={12}
-                            height={12}
-                            aria-hidden="true"
-                          />
+                          <Icon src="/assets/shared/icon-view-image.svg" size={12} />
                           View Image
                         </button>
                       </div>
@@ -346,8 +347,8 @@ function SlideshowDeck() {
                         className="mt-6 flex items-center"
                         style={{ gap: 16, opacity: 0 }}
                       >
-                        <img
-                          src={painting.artist.image}
+                        <Image
+                          src={painting.artist.image.src}
                           alt=""
                           width={48}
                           height={48}
@@ -464,13 +465,9 @@ function SlideshowDeck() {
                   disabled={index === 0}
                   aria-label="Previous work"
                 >
-                  <img
+                  <Icon
                     src="/assets/shared/icon-back-button.svg"
-                    alt=""
-                    width={14}
-                    height={14}
                     style={{ filter: "invert(1)" }}
-                    aria-hidden="true"
                   />
                 </button>
                 <button
@@ -480,13 +477,9 @@ function SlideshowDeck() {
                   disabled={index === total - 1}
                   aria-label="Next work"
                 >
-                  <img
+                  <Icon
                     src="/assets/shared/icon-next-button.svg"
-                    alt=""
-                    width={14}
-                    height={14}
                     style={{ filter: "invert(1)" }}
-                    aria-hidden="true"
                   />
                 </button>
               </div>
@@ -533,9 +526,12 @@ function SlideshowDeck() {
               >
                 Close
               </button>
-              <img
-                src={paintings[lightbox].images.gallery}
+              <Image
+                src={paintings[lightbox].images.gallery.src}
                 alt={paintings[lightbox].name}
+                width={paintings[lightbox].images.gallery.width}
+                height={paintings[lightbox].images.gallery.height}
+                sizes="(max-width: 768px) 90vw, 720px"
                 style={{
                   width: "100%",
                   height: "auto",

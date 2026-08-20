@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import Icon from "@/components/Icon";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -97,13 +99,7 @@ export default function Home() {
               <Reveal delay={0.85}>
                 <Link href="/slideshow" className="btn-ghost t-label">
                   Start Slideshow
-                  <img
-                    src="/assets/shared/icon-next-button.svg"
-                    alt=""
-                    width={12}
-                    height={12}
-                    aria-hidden="true"
-                  />
+                  <Icon src="/assets/shared/icon-next-button.svg" size={12} />
                 </Link>
               </Reveal>
             </div>
@@ -169,11 +165,14 @@ export default function Home() {
                     href={`/slideshow?work=${painting.slug}`}
                     className="gallery-card"
                   >
-                    <img
-                      src={painting.images.thumbnail}
+                    <Image
+                      src={painting.images.thumbnail.src}
                       alt={painting.name}
+                      width={painting.images.thumbnail.width}
+                      height={painting.images.thumbnail.height}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="gallery-card__media"
-                      loading="lazy"
+                      priority={i < 3}
                     />
                     <span className="gallery-card__scrim" aria-hidden="true" />
                     <span className="gallery-card__meta">

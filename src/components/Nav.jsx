@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 /**
  * Fixed studio header. `tone` flips the whole bar between the paper ground
@@ -62,11 +63,13 @@ export default function Nav({ tone = "paper" }) {
         }}
       >
         <Link href="/" aria-label="Galleria — home" className="flex items-center gap-4">
-          <img
+          <Image
             src="/assets/shared/logo.svg"
             alt=""
             width={64}
             height={32}
+            unoptimized
+            aria-hidden="true"
             style={{
               filter: onIt ? "invert(1)" : "none",
               opacity: 0.92,
