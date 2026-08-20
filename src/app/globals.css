@@ -75,7 +75,9 @@ body {
   color: var(--studio-ink-primary);
   font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
   font-weight: 300;
-  overflow-x: hidden;
+  /* `clip` rather than `hidden`: hidden makes the body a scroll container,
+     which silently breaks position:sticky on descendants. */
+  overflow-x: clip;
 }
 
 ::selection {
@@ -240,6 +242,30 @@ html.lenis body {
   cursor: not-allowed;
 }
 
+/* Control labels never wrap — at phone width "Step Back" and "View Image"
+   were breaking across two lines inside their pills. */
+.btn-round .t-label,
+.btn-ghost .t-label {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .btn-round {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .btn-round .t-label {
+    letter-spacing: 0.24em;
+  }
+}
+
+/* A label inside a control takes the control's colour. Without this, .t-label
+   forces dark ink and the text vanishes on the inverse buttons. */
+.btn-round .t-label,
+.btn-ghost .t-label {
+  color: inherit;
+}
+
 /* Focus ring — outline, matching the site's focus contract */
 a:focus-visible,
 button:focus-visible {
@@ -396,6 +422,148 @@ button:focus-visible {
   color: var(--studio-ink-inverse);
 }
 
+
+/* =========================================================================
+   INDEX CASCADE — the right-hand column drifts on its own
+   ========================================================================= */
+
+@keyframes cascade-drift {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.cascade {
+  overflow: hidden;
+  /* Width lives here, not inline, so the breakpoints below can reach it. */
+  width: clamp(280px, 30vw, 430px);
+  /* Feather the ends so cards enter and leave rather than being cut off. */
+  /* Long fade at the head so the works dissolve well before the top edge
+     rather than being sliced off by it. */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 6%,
+    black 34%,
+    black 84%,
+    transparent 100%
+  );
+}
+
+/* Two columns, deliberately out of step: different widths, a vertical offset
+   and different speeds, so they never line up into a symmetrical grid. */
+.cascade__columns {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(10px, 1vw, 16px);
+  align-items: start;
+}
+
+.cascade__track {
+  animation: cascade-drift 78s linear infinite;
+  will-change: transform;
+}
+
+.cascade__track--b {
+  animation-duration: 104s;
+  /* Margin, not padding: the -50% loop is measured on the border box, so an
+     offset here shifts the column without breaking the seam. */
+  margin-top: 22%;
+}
+
+/* Scrim that sinks the room into ink behind the drifting works. */
+.room-scrim {
+  background: linear-gradient(
+    to right,
+    transparent 20%,
+    rgba(15, 15, 15, 0.68) 48%,
+    var(--studio-bg-ink) 72%
+  );
+}
+
+.room-caption {
+  max-width: 34ch;
+}
+
+/* ---- Tablet: one column, the pair is too cramped to read ---- */
+@media (max-width: 900px) {
+  .cascade {
+    width: 40vw;
+  }
+  .cascade__columns {
+    grid-template-columns: 1fr;
+  }
+  /* The second column carries no unique works — both run the full set. */
+  .cascade__track--b {
+    display: none;
+  }
+}
+
+/* ---- Phone ----
+   The rail and the caption share one narrow row, so their widths are set
+   against each other: rail 36vw + right gutter 24px leaves the caption
+   46vw before the two would collide. */
+@media (max-width: 640px) {
+  .cascade {
+    width: 36vw;
+  }
+  .room-scrim {
+    /* Narrower frame: the ink has to arrive sooner, and lift from the
+       bottom as well so the caption keeps its contrast. */
+    background: linear-gradient(
+        to right,
+        transparent 2%,
+        rgba(15, 15, 15, 0.72) 34%,
+        var(--studio-bg-ink) 62%
+      ),
+      linear-gradient(to top, var(--studio-bg-ink) 4%, transparent 42%);
+  }
+  .room-caption {
+    max-width: 46vw;
+  }
+  .cascade .gallery-card__meta {
+    padding: 8px;
+  }
+  .cascade .gallery-card {
+    border-radius: 8px;
+  }
+}
+
+/* Cards in the cascade are cropped to a common upright format so the column
+   reads as one steady stream rather than a ragged stack of mixed shapes. */
+.cascade .gallery-card {
+  border-radius: clamp(8px, 0.7vw, 12px);
+}
+
+.cascade .gallery-card__media {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.cascade .gallery-card__meta {
+  padding: clamp(10px, 0.9vw, 14px);
+}
+
+.cascade:hover .cascade__track,
+.cascade:focus-within .cascade__track {
+  animation-play-state: paused;
+}
+
+/* A window onto the persistent 3D room. Deliberately has no background of
+   its own: the canvas sits behind the page content, so any fill here would
+   paint straight over the room. The scene's own clear colour fills it. */
+.stage-window {
+  position: relative;
+  overflow: hidden;
+  border-radius: clamp(16px, 1.4vw, 20px);
+  background: transparent;
+}
+
 /* =========================================================================
    REDUCED MOTION
    ========================================================================= */
@@ -413,5 +581,10 @@ button:focus-visible {
   .reveal {
     transform: none !important;
     opacity: 1 !important;
+  }
+  /* A 0.01ms marquee would jump to its end frame and sit there offset. */
+  .cascade__track {
+    animation: none !important;
+    transform: none !important;
   }
 }

@@ -13,6 +13,8 @@ export default function Footer() {
         background: "var(--studio-bg-ink)",
         color: "var(--studio-ink-inverse)",
         paddingTop: "clamp(80px, 10vw, 160px)",
+        // Clears the 3D stage while the pinned room is releasing.
+        zIndex: 8,
       }}
     >
       <div

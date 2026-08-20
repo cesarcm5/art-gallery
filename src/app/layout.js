@@ -2,6 +2,8 @@ import { Cormorant_Garamond, Jost, Fraunces, Space_Mono } from "next/font/google
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import Intro from "@/components/Intro";
+import { StageProvider } from "@/components/gallery3d/StageContext";
+import GalleryStage from "@/components/gallery3d/GalleryStage";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -45,7 +47,12 @@ export default function RootLayout({ children }) {
         className={`${cormorant.variable} ${jost.variable} ${fraunces.variable} ${spaceMono.variable} antialiased`}
       >
         <Intro />
-        <SmoothScroll>{children}</SmoothScroll>
+        <StageProvider>
+          {/* One room, shared by both routes, so the camera can fly between
+              the profile preview and the slideshow instead of cutting. */}
+          <GalleryStage />
+          <SmoothScroll>{children}</SmoothScroll>
+        </StageProvider>
       </body>
     </html>
   );

@@ -11,12 +11,16 @@ import Footer from "@/components/Footer";
 import MaskedText from "@/components/MaskedText";
 import Reveal from "@/components/Reveal";
 import { paintings } from "@/lib/paintings";
+import { useStageFrame } from "@/components/gallery3d/StageContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   const heroRef = useRef(null);
   const heroInnerRef = useRef(null);
+
+  // Hands the shared 3D room to the left-hand panel, viewed obliquely.
+  const stageFrame = useStageFrame("profile");
 
   // Hero drifts up and dims as the grid rises over it.
   useEffect(() => {
@@ -119,91 +123,148 @@ export default function Home() {
         </section>
 
         {/* ---------------------------------------------------------------
-            INDEX GRID
+            INDEX — the room fills the whole section, seen along the wall.
+            The works drift down the right over a gradient to ink.
         --------------------------------------------------------------- */}
+        {/* Runway: the section pins for one viewport of scroll, so the room
+            is held completely still and completely visible, then releases and
+            the footer follows below rather than sliding over it. */}
+        <div style={{ height: "200vh", position: "relative" }}>
         <section
           id="index"
-          className="relative"
+          className="overflow-hidden"
           style={{
-            background: "var(--studio-bg-surface)",
+            // Pinned: the room holds still at the top of the viewport while
+            // the rest of the page travels over it.
+            position: "sticky",
+            top: 0,
+            height: "100vh",
             borderTopLeftRadius: "var(--panel-radius)",
             borderTopRightRadius: "var(--panel-radius)",
-            paddingTop: "clamp(64px, 8vw, 128px)",
-            paddingBottom: "clamp(64px, 8vw, 128px)",
+            // sticky creates a stacking context, so the section's inner
+            // z-indexes no longer compete with the canvas — the whole section
+            // has to clear it as one. Which means it must stay transparent:
+            // the stage paints its own ink ground behind the room.
+            zIndex: 6,
+            background: "transparent",
           }}
         >
+          {/* The shared room is clipped to this box */}
+          <div ref={stageFrame} className="absolute inset-0" />
+
+          {/* Gradient to ink, so the drifting works have something to sit on */}
           <div
-            className="mx-auto w-full"
+            aria-hidden="true"
+            className="room-scrim pointer-events-none absolute inset-0"
+            style={{ zIndex: 6 }}
+          />
+
+          {/* Caption over the room */}
+          <div
+            className="room-caption absolute flex flex-col"
             style={{
-              maxWidth: "var(--content-max)",
-              padding: "0 var(--page-pad-x)",
+              zIndex: 7,
+              left: "var(--page-pad-x)",
+              bottom: "clamp(28px, 8vh, 88px)",
+              gap: "clamp(16px, 2.5vh, 24px)",
             }}
           >
-            <div
-              className="mb-16 flex items-baseline justify-between"
-              style={{
-                borderBottom: "1px solid var(--studio-hairline)",
-                paddingBottom: 16,
-              }}
-            >
-              <MaskedText as="h2" className="t-label">
-                The Index
-              </MaskedText>
-              <span className="t-mono" style={{ color: "var(--studio-ink-muted)" }}>
-                {String(paintings.length).padStart(2, "0")} works
+            <div>
+              <span
+                className="t-mono block"
+                style={{ color: "var(--studio-accent-gold)" }}
+              >
+                The room
+              </span>
+              <span
+                className="t-display mt-3 block"
+                style={{
+                  fontSize: "clamp(1.5rem, 5.5vw, 3.2rem)",
+                  color: "var(--studio-ink-inverse)",
+                }}
+              >
+                Fifteen works, one wall.
               </span>
             </div>
 
-            <div className="columns-1 gap-6 sm:columns-2 lg:columns-3">
-              {paintings.map((painting, i) => (
-                <Reveal
-                  key={painting.slug}
-                  className="mb-6 break-inside-avoid"
-                  delay={(i % 3) * 0.08}
+            <Link
+              href="/slideshow"
+              className="btn-round self-start"
+              style={{ width: "auto", padding: "0 24px", gap: 12 }}
+            >
+              <span className="t-label">Start Slideshow</span>
+              <Icon
+                src="/assets/shared/icon-next-button.svg"
+                style={{ filter: "invert(1)" }}
+              />
+            </Link>
+          </div>
+
+          {/* The works, drifting down the right in two offset columns */}
+          <div
+            className="cascade"
+            style={{
+              // Inline, because the .cascade rule in globals.css sets
+              // position:relative and would otherwise beat Tailwind's class.
+              position: "absolute",
+              zIndex: 7,
+              top: 0,
+              bottom: 0,
+              right: "var(--page-pad-x)",
+            }}
+          >
+            <div className="cascade__columns">
+              {[0, 1].map((col) => (
+                <div
+                  key={col}
+                  className={`cascade__track${col === 1 ? " cascade__track--b" : ""}`}
                 >
-                  <Link
-                    href={`/slideshow?work=${painting.slug}`}
-                    className="gallery-card"
-                  >
-                    <Image
-                      src={painting.images.thumbnail.src}
-                      alt={painting.name}
-                      width={painting.images.thumbnail.width}
-                      height={painting.images.thumbnail.height}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="gallery-card__media"
-                      priority={i < 3}
-                    />
-                    <span className="gallery-card__scrim" aria-hidden="true" />
-                    <span className="gallery-card__meta">
-                      <span
-                        className="t-mono block"
-                        style={{ color: "var(--studio-accent-gold)" }}
-                      >
-                        {String(i + 1).padStart(2, "0")}
+                  {/* The second column starts midway through the collection so
+                      the two never show the same work side by side. */}
+                  {(col === 0
+                    ? [...paintings, ...paintings]
+                    : [
+                        ...paintings.slice(7),
+                        ...paintings.slice(0, 7),
+                        ...paintings.slice(7),
+                        ...paintings.slice(0, 7),
+                      ]
+                  ).map((painting, i) => (
+                    <Link
+                      key={`${col}-${painting.slug}-${i}`}
+                      href={`/slideshow?work=${painting.slug}`}
+                      className="gallery-card mb-4 block"
+                      aria-hidden={i >= paintings.length ? "true" : undefined}
+                      tabIndex={i >= paintings.length ? -1 : undefined}
+                    >
+                      <Image
+                        src={painting.images.thumbnail.src}
+                        alt={painting.name}
+                        width={painting.images.thumbnail.width}
+                        height={painting.images.thumbnail.height}
+                        sizes="210px"
+                        className="gallery-card__media"
+                      />
+                      <span className="gallery-card__scrim" aria-hidden="true" />
+                      <span className="gallery-card__meta">
+                        <span
+                          className="t-display block"
+                          style={{
+                            fontSize: "clamp(0.7rem, 2.4vw, 1.05rem)",
+                            color: "var(--studio-ink-inverse)",
+                          }}
+                        >
+                          {painting.name}
+                        </span>
                       </span>
-                      <span
-                        className="t-display mt-2 block"
-                        style={{
-                          fontSize: "clamp(1.5rem, 2.2vw, 2.2rem)",
-                          color: "var(--studio-ink-inverse)",
-                        }}
-                      >
-                        {painting.name}
-                      </span>
-                      <span
-                        className="t-label mt-3 block"
-                        style={{ color: "var(--studio-ink-muted-inverse)" }}
-                      >
-                        {painting.artist.name} · {painting.year}
-                      </span>
-                    </span>
-                  </Link>
-                </Reveal>
+                    </Link>
+                  ))}
+                </div>
               ))}
             </div>
           </div>
         </section>
+        </div>
 
         <Footer />
       </main>
