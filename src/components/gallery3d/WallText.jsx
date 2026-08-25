@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { HANG_HEIGHT, xForIndex } from "./constants";
-import { paintingSize } from "./FramedPainting";
+import { paintingSize } from "./sizing";
 import { makeWallTextTexture } from "./wallTextTexture";
 import { closeUpLayout } from "./closeUpLayout";
 
@@ -19,16 +19,9 @@ import { closeUpLayout } from "./closeUpLayout";
 export default function WallText({ paintings, indexRef, closeUpRef }) {
   const groupRef = useRef(null);
   const meshRef = useRef(null);
-  const lightRef = useRef(null);
   const drawnFor = useRef(-1);
   const drawnBeside = useRef(null);
   const geomRef = useRef(null);
-
-  const target = useMemo(() => new THREE.Object3D(), []);
-
-  useEffect(() => {
-    if (lightRef.current) lightRef.current.target = target;
-  }, [target]);
 
   // The texture is owned here, so the previous one is disposed on every swap
   // and on unmount — canvas textures are not garbage collected on their own.
@@ -80,8 +73,6 @@ export default function WallText({ paintings, indexRef, closeUpRef }) {
       }
     }
 
-    // `target` is a child of this group, so its own origin already sits at the
-    // panel's centre — giving it the group's x would double the offset.
     group.position.x = xForIndex(index) + layout.panelX;
     group.position.y = HANG_HEIGHT + layout.panelY;
 
@@ -93,17 +84,6 @@ export default function WallText({ paintings, indexRef, closeUpRef }) {
       delta
     );
     mesh.visible = mesh.material.opacity > 0.01;
-
-    if (lightRef.current) {
-      // The picture lights are aimed at the canvas, so the plaster beside it
-      // is too dark to read. This wash comes up only with the panel.
-      lightRef.current.intensity = THREE.MathUtils.damp(
-        lightRef.current.intensity,
-        wanted * 9,
-        4,
-        delta
-      );
-    }
   });
 
   return (
@@ -126,17 +106,6 @@ export default function WallText({ paintings, indexRef, closeUpRef }) {
         />
       </mesh>
 
-      <primitive object={target} />
-      <spotLight
-        ref={lightRef}
-        position={[0, 0.9, 1.15]}
-        angle={0.72}
-        penumbra={1}
-        distance={5}
-        decay={1.3}
-        intensity={0}
-        color="#fff1d8"
-      />
     </group>
   );
 }

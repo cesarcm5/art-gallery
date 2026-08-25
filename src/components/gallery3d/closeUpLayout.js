@@ -82,3 +82,16 @@ export function closeUpLayout(size, fovDeg, aspect) {
     camZ: Math.max(0.8, Math.max(distV, distH)),
   };
 }
+
+/**
+ * Where a fixture should be pointing, relative to the centre of its work.
+ *
+ * Normally the canvas. In close-up the lamp swings over to the didactic — the
+ * same point WallText places the panel at, so the beam and the lettering can
+ * never end up in different places.
+ */
+export function lampAim(size, fovDeg, aspect, closeUp) {
+  if (!closeUp) return { x: 0, y: 0 };
+  const layout = closeUpLayout(size, fovDeg, aspect);
+  return { x: layout.panelX, y: layout.panelY };
+}

@@ -3,51 +3,7 @@
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useTexture } from "@react-three/drei";
-
-const MAX_H = 1.5;
-const MAX_W = 2.1;
-
-/**
- * Museums frame by period rather than hanging everything in matching gilt.
- * Older works get wide ornate gold; the 19th century gets walnut; modern
- * works get a narrow ebonised or pewter profile.
- */
-function frameForYear(year) {
-  if (year < 1700) {
-    return {
-      color: "#a9885a",
-      metalness: 0.95,
-      roughness: 0.3,
-      widthScale: 1.25,
-      liner: "#3a2c18",
-    };
-  }
-  if (year < 1850) {
-    return {
-      color: "#b8a07a",
-      metalness: 0.9,
-      roughness: 0.36,
-      widthScale: 1.1,
-      liner: "#33291a",
-    };
-  }
-  if (year < 1900) {
-    return {
-      color: "#5a4230",
-      metalness: 0.18,
-      roughness: 0.62,
-      widthScale: 0.95,
-      liner: "#2a2018",
-    };
-  }
-  return {
-    color: "#8e8b84",
-    metalness: 0.55,
-    roughness: 0.45,
-    widthScale: 0.75,
-    liner: "#15130f",
-  };
-}
+import { paintingSize, frameForYear, canvasImage } from "./sizing";
 
 /**
  * Builds a mitred picture-frame profile as an extruded ring: an outer
@@ -88,23 +44,8 @@ function useFrameGeometry(width, height, moulding, depth) {
   }, [width, height, moulding, depth]);
 }
 
-/** Fits a work to the hang, capped by MAX_W/MAX_H. Shared so the wall text
- *  can place itself flush against whatever width this returns. */
-export function paintingSize(painting) {
-  const { width, height } = painting.images.hero.large;
-  const aspect = width / height;
-  let h = MAX_H;
-  let w = h * aspect;
-  if (w > MAX_W) {
-    w = MAX_W;
-    h = w / aspect;
-  }
-  const moulding = Math.max(0.075, Math.min(w, h) * 0.085) * frameForYear(painting.year).widthScale;
-  return { w, h, moulding };
-}
-
 export default function FramedPainting({ painting, position, onSelect }) {
-  const texture = useTexture(painting.images.hero.large.src);
+  const texture = useTexture(canvasImage(painting).src);
   const groupRef = useRef(null);
 
   texture.colorSpace = THREE.SRGBColorSpace;

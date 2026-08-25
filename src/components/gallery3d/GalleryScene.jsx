@@ -11,8 +11,8 @@ import {
 import FramedPainting from "./FramedPainting";
 import TrackLamp from "./TrackLamp";
 import WallText from "./WallText";
-import { closeUpLayout } from "./closeUpLayout";
-import { paintingSize } from "./FramedPainting";
+import { closeUpLayout, lampAim } from "./closeUpLayout";
+import { paintingSize } from "./sizing";
 import {
   SPACING,
   WALL_H,
@@ -152,7 +152,7 @@ function CameraRig({ paintings, indexRef, modeRef, closeUpRef }) {
    maps for a scene that only ever shows three works at once). Slots are
    assigned by channel so a step along the wall retires only one lamp.
 ------------------------------------------------------------------------- */
-function PictureLight({ channel, indexRef, count }) {
+function PictureLight({ channel, indexRef, count, paintings, closeUpRef }) {
   const lightRef = useRef(null);
   const target = useMemo(() => new THREE.Object3D(), []);
   const slotRef = useRef(null);
@@ -205,6 +205,26 @@ function PictureLight({ channel, indexRef, count }) {
     const wanted = relocating || offWall || !inFrame ? 0 : 30 * breathe;
 
     light.intensity = THREE.MathUtils.damp(light.intensity, wanted, 8, delta);
+
+    // Follow wherever the fixture is pointing, and open the beam while it is
+    // over the didactic so the work beside it does not fall dark.
+    const closeUp = inFrame && !!closeUpRef?.current;
+    const aspect = state.size.width / Math.max(state.size.height, 1);
+    const aim = inFrame
+      ? lampAim(
+          paintingSize(paintings[slotRef.current]),
+          state.camera.fov,
+          aspect,
+          closeUp
+        )
+      : { x: 0, y: 0 };
+
+    const baseX = xForIndex(THREE.MathUtils.clamp(slotRef.current, 0, count - 1));
+    target.position.x = THREE.MathUtils.damp(target.position.x, baseX + aim.x, 3.2, delta);
+    target.position.y = THREE.MathUtils.damp(target.position.y, HANG_HEIGHT + aim.y, 3.2, delta);
+    target.updateMatrixWorld();
+
+    light.angle = THREE.MathUtils.damp(light.angle, closeUp ? 0.86 : 0.58, 3.2, delta);
 
     // Lamps do not travel along the wall. Once this one has dimmed out it
     // reappears above its new work, rather than dragging its pool across
@@ -334,9 +354,16 @@ export default function GalleryScene({
         position={[0, WALL_H, 0]}
       />
 
-      <PictureLight channel={0} indexRef={indexRef} count={count} />
-      <PictureLight channel={1} indexRef={indexRef} count={count} />
-      <PictureLight channel={2} indexRef={indexRef} count={count} />
+      {[0, 1, 2].map((channel) => (
+        <PictureLight
+          key={channel}
+          channel={channel}
+          indexRef={indexRef}
+          count={count}
+          paintings={paintings}
+          closeUpRef={closeUpRef}
+        />
+      ))}
 
       <Suspense fallback={null}>
         <Hall count={count} />
@@ -363,6 +390,8 @@ export default function GalleryScene({
             x={xForIndex(i)}
             index={i}
             indexRef={indexRef}
+            closeUpRef={closeUpRef}
+            painting={painting}
             warmth={((i * 37) % 10) / 10}
             phase={i * 1.7}
           />
