@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 /**
  * Fixed studio header. `tone` flips the whole bar between the paper ground
@@ -65,22 +64,16 @@ export default function Nav({ tone = "paper" }) {
           paddingRight: "var(--page-pad-x)",
         }}
       >
-        <Link href="/" aria-label="Galleria — home" className="flex items-center gap-4">
-          <Image
-            src="/assets/shared/logo.svg"
-            alt=""
-            width={64}
-            height={32}
-            unoptimized
-            aria-hidden="true"
-            style={{
-              filter: onIt ? "invert(1)" : "none",
-              opacity: 0.92,
-            }}
-          />
+        {/* The wordmark is the mark — it carries the brand on its own now, so
+            it stays at full ink and is never hidden on small screens. */}
+        <Link href="/" aria-label="Galleria — home" className="flex items-center">
           <span
-            className="t-label hidden sm:block"
-            style={{ color: muted, letterSpacing: "0.32em" }}
+            className="t-label"
+            style={{
+              color: ink,
+              letterSpacing: "0.38em",
+              fontSize: "clamp(12px, 0.95vw, 15px)",
+            }}
           >
             Galleria
           </span>
